@@ -1,0 +1,35 @@
+version: '3.3'
+
+services:
+  registry:
+    restart: always
+    image: registry:2
+    # ports:
+    #   - 5000:5000
+    environment:
+      # REGISTRY_HTTP_TLS_CERTIFICATE: /certs/domain.crt
+      # REGISTRY_HTTP_TLS_KEY: /certs/domain.key
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
+    volumes:
+      - ${BASEDIR:-/srv/common}/registry/data:/var/lib/registry
+      # - ${BASEDIR:-/srv/common}/registry/certs:/certs
+      - ${BASEDIR:-/srv/common}/registry/auth:/auth
+    networks:
+      - traefik_default
+      # - traefik_network
+      # - default
+    labels:
+      - "traefik.port=5000"
+      - "traefik.enable=true"
+      # - "traefik.docker.network=traefik_network"
+      - "traefik.http.routers.registry.rule=Host(`${HOSTNAME:-localhost}`)"
+      - "traefik.http.routers.registry.entrypoints=web"
+      - "traefik.http.routers.registry-tls.rule=Host(`${HOSTNAME:-localhost}`)"
+      - "traefik.http.routers.registry-tls.entrypoints=websecure"
+      - "traefik.http.routers.registry-tls.tls.certresolver=default"
+
+networks:
+  traefik_default:
+    external: true
