@@ -24,9 +24,9 @@ services:
       - "traefik.port=5000"
       - "traefik.enable=true"
       # - "traefik.docker.network=traefik_network"
-      - "traefik.http.routers.registry.rule=Host(`${HOSTNAME:-localhost}`)"
+      - "traefik.http.routers.registry.rule=Host(`${APP_FQDN:-localhost}`)"
       - "traefik.http.routers.registry.entrypoints=web"
-      - "traefik.http.routers.registry-tls.rule=Host(`${HOSTNAME:-localhost}`)"
+      - "traefik.http.routers.registry-tls.rule=Host(`${APP_FQDN:-localhost}`)"
       - "traefik.http.routers.registry-tls.entrypoints=websecure"
       - "traefik.http.routers.registry-tls.tls.certresolver=default"
 
